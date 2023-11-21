@@ -145,7 +145,7 @@ async function startAdrian() {
                             title: `${namabot}`,
                             body: `${namaowner}`,
                             thumbnailUrl: ppgroup,
-                            sourceUrl: "https://instagram.com/frmnkalera",
+                            sourceUrl: "https://instagram.com/tinoisgood",
                             mediaType: 1,
                             renderLargerThumbnail: true
                         }
@@ -162,7 +162,7 @@ async function startAdrian() {
                             title: `${namabot}`,
                             body: `${namaowner}`,
                             thumbnailUrl: ppgroup,
-                            sourceUrl: "https://instagram.com/frmnkalera",
+                            sourceUrl: "https://instagram.com/tinoisgood",
                             mediaType: 1,
                             renderLargerThumbnail: true
                         }
@@ -179,7 +179,7 @@ async function startAdrian() {
                             title: `${namabot}`,
                             body: `${namaowner}`,
                             thumbnailUrl: ppgroup,
-                            sourceUrl: "https://instagram.com/frmnkalera",
+                            sourceUrl: "https://instagram.com/tinoisgood",
                             mediaType: 1,
                             renderLargerThumbnail: true
                         }
@@ -196,7 +196,7 @@ async function startAdrian() {
                             title: `${namabot}`,
                             body: `${namaowner}`,
                             thumbnailUrl: ppgroup,
-                            sourceUrl: "https://instagram.com/frmnkalera",
+                            sourceUrl: "https://instagram.com/tinoisgood",
                             mediaType: 1,
                             renderLargerThumbnail: true
                         }
@@ -213,7 +213,7 @@ async function startAdrian() {
                             title: `${namabot}`,
                             body: `${namaowner}`,
                             thumbnailUrl: ppgroup,
-                            sourceUrl: "https://instagram.com/frmnkalera",
+                            sourceUrl: "https://instagram.com/tinoisgood",
                             mediaType: 1,
                             renderLargerThumbnail: true
                         }
@@ -230,7 +230,7 @@ async function startAdrian() {
                             title: `${namabot}`,
                             body: `${namaowner}`,
                             thumbnailUrl: ppgroup,
-                            sourceUrl: "https://instagram.com/frmnkalera",
+                            sourceUrl: "https://instagram.com/tinoisgood",
                             mediaType: 1,
                             renderLargerThumbnail: true
                         }
@@ -256,7 +256,7 @@ async function startAdrian() {
                 try {
                     ppgroup = await conn.profilePictureUrl(anu.id, 'image')
                 } catch {
-                    ppgroup = 'https://tinyurl.com/yx93l6da'
+                    ppgroup = 'https://tinyurl.com/c8a9umt6'
                 }
               if (anu.action == 'promote') {
                     let a = `Congratulations @${num.split("@")[0]}, on being promoted to admin of this group ${metadata.subject} 🎉`
@@ -267,7 +267,7 @@ async function startAdrian() {
          title: `${namabot}`,
          body: `${namaowner}`,
          thumbnailUrl: ppuser,
-         sourceUrl: "https://instagram.com/frmnkalera",
+         sourceUrl: "https://instagram.com/tinoisgood",
          mediaType: 1,
          renderLargerThumbnail: true
     }}})
@@ -280,7 +280,7 @@ async function startAdrian() {
          title: `${namabot}`,
          body: `${namaowner}`,
          thumbnailUrl: ppuser,
-         sourceUrl: "https://instagram.com/frmnkalera",
+         sourceUrl: "https://instagram.com/tinoisgood",
          mediaType: 1,
          renderLargerThumbnail: true
     }}})
