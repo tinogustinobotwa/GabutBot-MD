@@ -21,6 +21,7 @@ const qris = fs.readFileSync ('./media/qris.jpg')
 const { smsg, getGroupAdmins, formatp, tanggal, formatDate, getTime, isUrl, await, sleep, clockString, msToDate, sort, toNumber, enumGetKey, runtime, fetchJson, getBuffer, jsonformat, delay, format, logic, generateProfilePicture, parseMention, getRandom, pickRandom, reSize } = require('./lib/myfunc')
 const { addResponList, delResponList, isAlreadyResponList, isAlreadyResponListGroup, sendResponList, updateResponList, getDataResponList } = require('./lib/addlist');
 const { getRegisteredRandomId, addRegisteredUser, createSerial, checkRegisteredUser } = require('./database/register.js')
+const { Connection } = require('mongoose')
 // read database
 global.db.data = JSON.parse(fs.readFileSync('./src/database.json'))
 if (global.db.data) global.db.data = {
@@ -125,7 +126,25 @@ module.exports = conn = async (conn, m, chatUpdate, store) => {
 		let akinator = JSON.parse(fs.readFileSync('./src/akinator.json'));
         let db_respon_list = JSON.parse(fs.readFileSync('./database/list.json'));
 		// let _family100 = db.data.game.family100 = []
- 
+        
+        //DATABASE GAME KOCAK
+        let tebaklagu = []
+        let kuismath = []
+        let tebakgambar = []
+        let tebakkata = []
+        let tebakkalimat = []
+        let tebaklirik = []
+        let tebaktebakan = []
+        let tebakbendera = []
+        let tebakbendera2 = []
+        let tebakkabupaten = []
+        let tebakkimia = []
+        let tebakasahotak = []
+        let tebaksiapakahaku = []
+        let tebaksusunkata = []
+        let tebaktekateki = []
+        
+
         // Const Tambahan Sc Gw
 
         const more = String.fromCharCode(8206)
@@ -271,8 +290,307 @@ async function newReply(teks) {
         }
         
 		// Apikey
-apikey = `carolineismine`
+apikey = `rozananda123nanda`
+ /* ~~~~~~~~~ RESPON CMD GAME~~~~~~~~~ */
+ if (akinator.hasOwnProperty(m.sender.split('@')[0]) && isCmd && ["0", "1", "2", "3", "4", "5"].includes(body)) {
+    kuis = true
+    var {
+        server,
+        frontaddr,
+        session,
+        signature,
+        question,
+        step
+    } = akinator[m.sender.split('@')[0]]
+    if (step == "0" && budy == "5") newReply("Maaf Anda telah mencapai pertanyaan pertama")
+    var ini_url = `https://api.lolhuman.xyz/api/akinator/answer?apikey=${lol}&server=${server}&frontaddr=${frontaddr}&session=${session}&signature=${signature}&answer=${budy}&step=${step}`
+    var get_result = await fetchJson(ini_url)
+    var get_result = get_result.result
+    if (get_result.hasOwnProperty("name")) {
+        var ini_name = get_result.name
+        var description = get_result.description
+        ini_txt = `${ini_name} - ${description}\n\n`
+        ini_txt += "*Terima Kasih*\n*Powered By myokuDev & LoL Human*"
+        await conn.sendMessage(m.chat, {
+            image: {
+                url: get_result.image
+            },
+            caption: ini_txt
+        }).then(() => {
+            delete akinator[m.sender.split('@')[0]]
+            fs.writeFileSync("./src/data/akinator.json", JSON.stringify(akinator))
+        })
+        return
+    }
+    var {
+        question,
+        _,
+        step
+    } = get_result
+    ini_txt = `${question}\n\n`
+    ini_txt += "0 - Ya\n"
+    ini_txt += "1 - Tidak\n"
+    ini_txt += "2 - Saya Tidak Tau\n"
+    ini_txt += "3 - Mungkin\n"
+    ini_txt += "4 - Mungkin Tidak\n"
+    ini_txt += "5 - Kembali ke Pertanyaan Sebelumnya"
+    if (args[0] === '5') {
+        var ini_url = `https://api.lolhuman.xyz/api/akinator/back?apikey=${lol}&server=${server}&frontaddr=${frontaddr}&session=${session}&signature=${signature}&answer=${budy}&step=${step}`
+        var get_result = await fetchJson(ini_url)
+        var get_result = get_result.result
+        var {
+            question,
+            _,
+            step
+        } = get_result
+        ini_txt = `${question}\n\n`
+        ini_txt += "0 - Ya\n"
+        ini_txt += "1 - Tidak\n"
+        ini_txt += "2 - Saya Tidak Tau\n"
+        ini_txt += "3 - Mungkin\n"
+        ini_txt += "4 - Mungkin Tidak"
+        ini_txt += "5 - Kembali ke Pertanyaan Sebelumnya"
+    }
+    conn.sendText(m.chat, ini_txt, m).then(() => {
+        const data_ = akinator[m.sender.split('@')[0]]
+        data_["question"] = question
+        data_["step"] = step
+        akinator[m.sender.split('@')[0]] = data_
+        fs.writeFileSync("./src/data/akinator.json", JSON.stringify(akinator))
+    })
+}
+if (tebakgambar.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebakgambar[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebakgambar[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Gambar 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebakgambar[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (kuismath.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = kuismath[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete kuismath[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await newReply(`🎮 Kuis Matematika  🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? kirim ${prefix}math mode`)
+        delete kuismath[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebakasahotak.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebakasahotak[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebakasahotak[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Asah Otak 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebakasahotak[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebaksiapakahaku.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebaksiapakahaku[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebaksiapakahaku[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Siapakah Aku 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebaksiapakahaku[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebaksusunkata.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebaksusunkata[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebaksusunkata[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Susun Kata 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebaksusunkata[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebakbendera.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebakbendera[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebakbendera[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Gambar 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebakbendera[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebakbendera2.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebakbendera2[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebakbendera2[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Bendera 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebakbendera2[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebakkabupaten.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebakkabupaten[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebakkabupaten[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Kabupaten 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebakkabupaten[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebakkimia.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebakkimia[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebakkimia[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Kimia 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebakkimia[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebaktekateki.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebaktekateki[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebaktekateki[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Teka Teki 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebaktekateki[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebaklagu.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebaklagu[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebaklagu[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Lagu 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebaklagu[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebakkata.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebakkata[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebakkata[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Kata 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebakkata[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebakkalimat[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebakkalimat[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Kalimat 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebakkalimat[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebaklirik.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebaklirik[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebaklirik[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Lirik 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebaklirik[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+if (tebaktebakan.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+    kuis = true
+    jawaban = tebaktebakan[m.sender.split('@')[0]]
+    if (budy.toLowerCase() == "nyerah") {
+        await newReply('*Anda Telah menyerah*')
+        delete tebaktebakan[m.sender.split('@')[0]]
+    } else if (budy.toLowerCase() == jawaban) {
+        await conn.sendText(m.chat, `🎮 Tebak Tebakan 🎮\n\nJawaban Benar 🎉`, m)
+        delete tebaktebakan[m.sender.split('@')[0]]
+    } else newReply('*Jawaban Salah!*')
+}
+this.game = this.game ? this.game : {}
+let room = Object.values(this.game).find(room => room.id && room.game && room.state && room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender) && room.state == 'PLAYING')
+if (room) {
+    let ok
+    let isWin = !1
+    let isTie = !1
+    let isSurrender = !1
+    // newReply(`[DEBUG]\n${parseInt(m.text)}`)
+    if (!/^([1-9]|(me)?nyerah|surr?ender|off|skip)$/i.test(m.text)) return
+    isSurrender = !/^[1-9]$/.test(m.text)
+    if (m.sender !== room.game.currentTurn) { // nek wayahku
+        if (!isSurrender) return !0
+    }
+    if (!isSurrender && 1 > (ok = room.game.turn(m.sender === room.game.playerO, parseInt(m.text) - 1))) {
+        newReply({
+            '-3': 'Game telah berakhir',
+            '-2': 'Invalid',
+            '-1': 'Posisi Invalid',
+            0: 'Posisi Invalid',
+        } [ok])
+        return !0
+    }
+    if (m.sender === room.game.winner) isWin = true
+    else if (room.game.board === 511) isTie = true
+    let arr = room.game.render().map(v => {
+        return {
+            X: '❌',
+            O: '⭕',
+            1: '1️⃣',
+            2: '2️⃣',
+            3: '3️⃣',
+            4: '4️⃣',
+            5: '5️⃣',
+            6: '6️⃣',
+            7: '7️⃣',
+            8: '8️⃣',
+            9: '9️⃣',
+        } [v]
+    })
+    if (isSurrender) {
+        room.game._currentTurn = m.sender === room.game.playerX
+        isWin = true
+    }
+    let winner = isSurrender ? room.game.currentTurn : room.game.winner
+    let str = `Room ID: ${room.id}
 
+${arr.slice(0, 3).join('')}
+${arr.slice(3, 6).join('')}
+${arr.slice(6).join('')}
+
+${isWin ? `@${winner.split('@')[0]} Menang!` : isTie ? `Game berakhir` : `Giliran ${['', ''][1 * room.game._currentTurn]} (@${room.game.currentTurn.split('@')[0]})`}
+: @${room.game.playerX.split('@')[0]}
+: @${room.game.playerO.split('@')[0]}
+
+Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
+    if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== m.chat)
+        room[room.game._currentTurn ^ isSurrender ? 'x' : 'o'] = m.chat
+    if (room.x !== room.o) conn.sendText(room.x, str, m, {
+        mentions: parseMention(str)
+    })
+    conn.sendText(room.o, str, m, {
+        mentions: parseMention(str)
+    })
+    if (isTie || isWin) {
+        delete this.game[room.id]
+    }
+}
 // Akinator Setting Start
 	/* if (akinator.hasOwnProperty(m.sender.split('@')[0]) && isCmd && ["0", "1", "2", "3", "4", "5"].includes(body)) {
                 
@@ -345,6 +663,26 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             if (isWin || isSurender) delete _family100['family100'+m.chat]
         }
 		*/
+
+        //DATA GAME
+        if (tebakasahotak.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
+            kuis = true
+            jawaban = tebakasahotak[m.sender.split('@')[0]]
+            if (budy.toLowerCase() == "nyerah") {
+                await newReply('*Anda Telah menyerah*')
+                delete tebakasahotak[m.sender.split('@')[0]]
+            } else if (budy.toLowerCase() == jawaban) {
+                await conn.sendText(m.chat, `🎮 Asah Otak 🎮\n\nJawaban Benar 🎉`, m)
+                delete tebakasahotak[m.sender.split('@')[0]]
+            } else newReply('*Jawaban Salah!*')
+        }
+
+
+
+
+
+
+
         // Push Message To Console && Auto Read
         if (m.message) {
             console.log(chalk.black(chalk.bgWhite('[ PESAN ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> Dari'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> Di'), chalk.green(m.isGroup ? pushname : 'Private Chat', m.chat))
@@ -561,6 +899,32 @@ ${JSON.stringify(ha.participants)}`)
                 conn.sendMessage(m.chat, { image: thumb, caption: ani }, { quoted: fkontak })
                 } else m.reply('ɪɴᴠᴀʟɪᴅ ᴀᴘɪᴋᴇʏ !')
             break
+
+
+            case 'cekresi':
+                if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝚋𝚎𝚕𝚞𝚖 𝚍𝚊𝚏𝚝𝚊𝚛! 𝚂𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚍𝚊𝚏𝚝𝚊𝚛 𝚍𝚎𝚗𝚐𝚊𝚗 𝚌𝚊𝚛𝚊 𝚔𝚎𝚝𝚒𝚔 *#𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛*')
+                
+                if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
+            db.data.users[m.sender].limit -= 1
+			if (args.length == 0) return newReply(`𝙴𝚡 : ${prefix + command} 𝙹𝙿8234909181 - *𝙿𝚊𝚜𝚝𝚒𝚔𝚊𝚗 𝚁𝚎𝚜𝚒 𝙱𝚎𝚗𝚎𝚛, 𝙹𝚒𝚔𝚊 𝚗𝚐𝚐𝚊 𝚋𝚎𝚗𝚎𝚛 𝚐𝚊 𝚖𝚞𝚗𝚌𝚞𝚕 𝚊𝚝𝚊𝚞 𝚎𝚛𝚛𝚘𝚛*`)
+			newReply(mess.wait)
+			axios
+				.get(`https://api.lolhuman.xyz/api/checkresi?apikey=${apikey}&resi=${q}`)
+				.then(({ data }) => {
+					var text = `*𝙽𝙾 𝚁𝙴𝚂𝙸* : *${data.result.resi}*\n`
+					text += `--------------------\n*𝙴𝙺𝙿𝙴𝙳𝙸𝚂𝙸* : *${data.result.courier}*\n--------------------\n`
+                    text += `*𝙳𝙰𝚁𝙸* : ${data.result.origin.name}\n--------------------\n`
+				    text += `*𝚃𝚄𝙹𝚄𝙰𝙽* : ${data.result.destination.name}\n--------------------\n\n`
+                    text += `*𝚁𝚄𝚃𝙴 𝙿𝙰𝙺𝙴𝚃*\n\n`
+					for (let x of data.result.history) {
+                        text += `Deskripsi : ${x.note}\n`
+                        text += `Waktu : ${x.time}\n\n`
+                    }
+					newReply(text)
+				}) 
+				.catch(console.error)
+			break
+
         case 'ambilsesi':
             if (!isCreator) return newReply(mess.owner)
             newReply('Tunggu Sebentar, Sedang mengambil file sesi mu')
@@ -1852,7 +2216,7 @@ ${id}`)
 			case 'pindownload': {
 			    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
 			    if (args.length == 0) return newReply(`Contoh: ${prefix + command} https://pin.it/3E5fARH`)
 			    let anu = axios.get(`https://api.lolhuman.xyz/api/pinterestdl?apikey=${apikey}&url=${full_args}`).then(({ data }) => {
 			    conn.sendMessage(m.chat, { video: { url: data.result }, caption: `${namabot}`}, { quoted: fkontak })
@@ -1862,7 +2226,7 @@ ${id}`)
 			case 'git': case 'gitclone': {
 			    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!args[0]) return newReply(`Mana link nya?\nContoh :\n${prefix}${command} https://github.com/YukiShima4/tes`)
                 if (!isUrl(args[0]) && !args[0].includes('github.com')) return newReply(`Link invalid!!`)
                 let regex1 = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
@@ -1871,35 +2235,14 @@ ${id}`)
                 let url = `https://api.github.com/repos/${user}/${repo}/zipball`
                 let filename = (await fetch(url, {method: 'HEAD'})).headers.get('content-disposition').match(/attachment; filename=(.*)/)[1]
                 conn.sendMessage(m.chat, { document: { url: url }, fileName: filename+'.zip', mimetype: 'application/zip' }, { quoted: m }).catch((err) => reply(mess.error))
-            }       
+            }           
             break
-			case 'ytplay':
-			case 'play':
-			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-            db.data.users[m.sender].limit -= 10
-            newReply(`🚩 10 Limit Used`)
-			if (args.length == 0) return await newReply(`Example: ${prefix + command} melukis senja`)
-			newReply(mess.wait)
-			axios
-				.get(`https://api.lolhuman.xyz/api/ytsearch?apikey=${apikey}&query=${full_args}`)
-				.then(({ data }) => {
-					axios.get(`https://api.lolhuman.xyz/api/ytaudio2?apikey=${apikey}&url=https://www.youtube.com/watch?v=${data.result[0].videoId}`).then(({ data }) => {
-						var caption = `❖ Title    : *${data.result.title}*\n`
-						caption += `❖ Size     : *${data.result.size}*`
-						conn.sendMessage(m.chat, { image: { url: data.result.thumbnail }, caption }).then(() => {
-							conn.sendMessage(m.chat, { audio: { url: data.result.link }, mimetype: 'audio/mp4', fileName: `${data.result.title}.mp3` })
-						})
-					})
-				})
-				.catch(console.error)
-			break
-			
-	
+
 		    case 'ytmp4':
 			if (!isRegistered) return newReply('Kamu belum daftar! Silahkan daftar dengan cara #daftar nama|umur!')
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} https://www.youtube.com/watch?v=qZIQAk-BUEc`)
 			newReply(mess.wait)
 			axios
@@ -1921,7 +2264,7 @@ ${id}`)
 				if (!isRegistered) return newReply('Kamu belum daftar! Silahkan daftar dengan cara #daftar nama|umur!')
 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newRreply(`Usage: ${prefix + command} link`)
                     query = args.join(" ")
                     get_result = await fetchJson(`https://api.lolhuman.xyz/api/tiktokslide?apikey=${apikey}&url=${query}`)
@@ -1930,34 +2273,38 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
                         conn.sendImage(m.chat, get_result[x], `Tiktok Download`, m)
                     }
                     break
-			case 'tiktok': {
-			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-            db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
-			if (args.length == 0) return newReply(`Example: ${prefix + command} https://vt.tiktok.com/ZSwWCk5o/`)
-			newReply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=${args[0]}`).then(({ data }) => {
-				conn.sendMessage(m.chat, { video: { url: data.result.link }, mimetype: 'video/mp4' })
-			})
-			
-			}
-			break
+                    case 'tiktok': {
+                        if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝙱𝚎𝚕𝚞𝚖 𝙳𝚊𝚏𝚝𝚊𝚛 𝚜𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚔𝚎𝚝𝚒𝚔 *𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛*')
+                        if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
+                        db.data.users[m.sender].limit -= 1
+                        if (!q) return newReply('𝙼𝚊𝚗𝚊 𝙻𝚒𝚗𝚔 𝚃𝚒𝚔𝚝𝚘𝚔𝚖𝚞! 𝙺𝚎𝚝𝚒𝚔 *𝚝𝚒𝚔𝚝𝚘𝚔 𝚕𝚒𝚗𝚔𝚖𝚞*')
+                        let tt = await fetchJson(`https://api.lolhuman.xyz/api/tiktok2?apikey=${apikey}&url=${q}`)
+                        await conn.sendMessage(m.chat, { video: { url: tt.result }, caption: mess.done }, { quoted: m })
+                      }
+                        break
 			
 			case 'tiktokaudio': {
+                if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝙱𝚎𝚕𝚞𝚖 𝙳𝚊𝚏𝚝𝚊𝚛 𝚜𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚔𝚎𝚝𝚒𝚔 𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛')
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-            db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
-			if (args.length == 0) return newReply(`Example: ${prefix + command} https://vt.tiktok.com/ZSwWCk5o/`)
-			newReply(mess.wait)
-			conn.sendMessage(m.chat, { audio: { url: `https://api.lolhuman.xyz/api/tiktokmusic?apikey=${apikey}&url=${args[0]}` }, mimetype: 'audio/mp4', fileName: `${data.result.title}.mp3` })
-			
-			}
-			break
+            db.data.users[m.sender].limit -= 1
+            if (!q) return newReply('𝙼𝚊𝚗𝚊 𝙻𝚒𝚗𝚔 𝚃𝚒𝚔𝚝𝚘𝚔𝚖𝚞! 𝙺𝚎𝚝𝚒𝚔 *𝚝𝚒𝚔𝚝𝚘𝚔 𝚕𝚒𝚗𝚔𝚖𝚞*')
+        let i = await fetchJson(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=${apikey}&url=${q}`)
+        await conn.sendMessage(m.chat, {
+          audio: {
+            url: i.result
+          },
+          mimetype: 'audio/mp4'
+        }, {
+          quoted: m
+        })
+        
+      }
+        break
 			
 			case 'igdl': {
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} https://www.instagram.com/p/CJ8XKFmJ4al/?igshid=1acpcqo44kgkn`)
 			newReply(mess.wait)
 			axios.get(`https://api.lolhuman.xyz/api/instagram?apikey=${apikey}&url=${args[0]}`).then(({ data }) => {
@@ -1975,7 +2322,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'igdl2': {
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} https://www.instagram.com/p/CJ8XKFmJ4al/?igshid=1acpcqo44kgkn`)
 			newReply(mess.wait)
 			axios.get(`https://api.lolhuman.xyz/api/instagram2?apikey=${apikey}&url=${args[0]}`).then(({ data }) => {
@@ -1994,7 +2341,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 			case 'twtdl': {
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} https://twitter.com/gofoodindonesia/status/1229369819511709697`)
 			newReply(mess.wait)
 			axios.get(`https://api.lolhuman.xyz/api/twitter?apikey=${apikey}&url=${args[0]}`).then(({ data }) => {
@@ -2007,7 +2354,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'fbdl': {
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} https://id-id.facebook.com/SamsungGulf/videos/video-bokeh/561108457758458/`)
 			newReply(mess.wait)
 			axios.get(`https://api.lolhuman.xyz/api/facebook?apikey=${apikey}&url=${args[0]}`).then(({ data }) => {
@@ -2169,7 +2516,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
             case 'image': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Example : ${prefix + command}`)
                 newReply(mess.wait)
 		        let { pinterest } = require('./lib/scraper')
@@ -2182,7 +2529,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
             case 'google': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} fatih arridho`)
                 let google = require('google-it')
                 google({'query': text}).then(res => {
@@ -2218,7 +2565,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
             case 'kbbi':{
             if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} kursi`)
 			newReply(mess.wait)
 		kueri = args.join(" ")
@@ -2240,7 +2587,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		case 'brainly':{
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} siapakah sukarno`)
 			newReply(mess.wait)
 		kueri = args.join(" ")
@@ -2258,7 +2605,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'roboguru':{
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} siapakah sukarno`)
 			newReply(mess.wait)
 			deto = await fetchJson(`https://api.lolhuman.xyz/api/roboguru?apikey=${apikey}&query=${full_args}&grade=sma&subject=sejarah`).catch((err) => console.error(err?.response?.data))
@@ -2276,7 +2623,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'jaraktempuh':{
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Usage: ${prefix + command} kota1|kota2`)
 			get_args = args.join(" ").split("|")
                     kota1 = get_args[0]
@@ -2303,7 +2650,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 			case 'wikipedia':
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} Tahu`)
 			newReply(mess.wait)
 		kueri = args.join(" ")
@@ -2316,7 +2663,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'translate':{
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} en Tahu Bacem`)
 			newReply(mess.wait)
 			var kode_negara = args[0]
@@ -2335,7 +2682,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'jadwaltv':
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} RCTI`)
 			doti = await fetchJson(`https://api.lolhuman.xyz/api/jadwaltv/${args[0]}?apikey=${apikey}`)
 			newReply(mess.wait)
@@ -2349,7 +2696,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'jadwaltvnow':
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			datf = await fetchJson(`https://api.lolhuman.xyz/api/jadwaltv/now?apikey=${apikey}`)
 			newReply(mess.wait)
 			var tittttt = `Jadwal TV Now :\n`
@@ -2390,7 +2737,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'cnnindonesia':{
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			(`https://api.lolhuman.xyz/api/cnnindonesia?apikey=${apikey}`)
 			newReply(mess.wait)
 			var tittttttt = 'Result :\n'
@@ -2407,7 +2754,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'cnnnasional':{
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			datd = await fetchJson(`https://api.lolhuman.xyz/api/cnnindonesia/nasional?apikey=${apikey}`)
 			newReply(mess.wait)
 			var titttttttt = 'Result :\n'
@@ -2424,7 +2771,7 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 		    case 'cnninternasional':{
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			dats = await fetchJson(`https://api.lolhuman.xyz/api/cnnindonesia/internasional?apikey=${apikey}`)
 			newReply(mess.wait)
 			var tittttttttt = 'Result :\n'
@@ -2439,9 +2786,10 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 			break
 			
 		    case 'infogempa':
+                if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝚋𝚎𝚕𝚞𝚖 𝚍𝚊𝚏𝚝𝚊𝚛! 𝚂𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚍𝚊𝚏𝚝𝚊𝚛 𝚍𝚎𝚗𝚐𝚊𝚗 𝚌𝚊𝚛𝚊 𝚔𝚎𝚝𝚒𝚔 *#𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛*')
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-            db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            db.data.users[m.sender].limit -= 1
+            
 			datu = await fetchJson(`https://api.lolhuman.xyz/api/infogempa?apikey=${apikey}`)
 			newReply(mess.wait)
 			var caption = `⭔ Lokasi : ${datu.result.lokasi}\n`
@@ -2465,10 +2813,11 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 			break
 			
 		    case 'infocuaca':{
+                if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝚋𝚎𝚕𝚞𝚖 𝚍𝚊𝚏𝚝𝚊𝚛! 𝚂𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚍𝚊𝚏𝚝𝚊𝚛 𝚍𝚎𝚗𝚐𝚊𝚗 𝚌𝚊𝚛𝚊 𝚔𝚎𝚝𝚒𝚔 *#𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛*')
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-            db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
-			if (args.length == 0) return newReply(`Example: ${prefix + command} Yogyakarta`)
+            db.data.users[m.sender].limit -= 1
+            
+			if (args.length == 0) return newReply(`Example: ${prefix + command} Trenggalek`)
 			newReply(mess.wait)
 			get_result = await fetchJson(`https://api.lolhuman.xyz/api/cuaca/${args[0]}?apikey=${apikey}`)
             dataaaa = get_result.result
@@ -2485,10 +2834,10 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 			}
 			break
 			
-			case 'kodepos':
+			case 'cekkodepos':
+                if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝚋𝚎𝚕𝚞𝚖 𝚍𝚊𝚏𝚝𝚊𝚛! 𝚂𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚍𝚊𝚏𝚝𝚊𝚛 𝚍𝚎𝚗𝚐𝚊𝚗 𝚌𝚊𝚛𝚊 𝚔𝚎𝚝𝚒𝚔 *#𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛*')
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-            db.data.users[m.sender].limit -= 2
-            newReply(`🚩 2 Limit Used`)
+            db.data.users[m.sender].limit -= 1
 			if (args.length == 0) return newReply(`Example: ${prefix + command} Slemanan or ${prefix + command} 66154`)
 			newReply(mess.wait)
 		kueri = args.join(" ")
@@ -2555,11 +2904,11 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
 			case 'sticker':
             case 'stiker':
             case 's':{
+                if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝙱𝚎𝚕𝚞𝚖 𝙳𝚊𝚏𝚝𝚊𝚛 𝚜𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚔𝚎𝚝𝚒𝚔 *𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛*')
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-                db.data.users[m.sender].limit -= 10
-                newReply(`🚩 10 Limit Used`)
+                db.data.users[m.sender].limit -= 1
                 if (!quoted) return newReply(`Balas Video/Image Dengan Caption ${prefix + command}`)
-                newReply(mess.wait)
+                
                 if (/image/.test(mime)) {
                     let media = await quoted.download()
                     let encmedia = await conn.sendImageAsSticker(m.chat, media, m, {
@@ -2626,10 +2975,11 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess
                 let msgsaa = await conn.sendImage(m.chat, anuaa.result.thumbnail, `⭔ Title : ${anuaa.result.title}\n⭔ Singer : ${anuaa.result.artists}\n⭔ Duration : ${anuaa.result.duration}\n⭔ Popularity : ${anuaa.result.popularity}\n⭔ URL : ${anuaa.result.external_urls.spotify}`, m)
                 conn.sendMessage(m.chat, { audio: { url: anuaa.result.link }, mimetype: 'audio/mp4', fileName: anuaa.result.title+'.mp3' }, { quoted: m })
 				break
+
 				case 'ytmp3': 
+                if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝚋𝚎𝚕𝚞𝚖 𝚍𝚊𝚏𝚝𝚊𝚛! 𝚂𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚍𝚊𝚏𝚝𝚊𝚛 𝚍𝚎𝚗𝚐𝚊𝚗 𝚌𝚊𝚛𝚊 𝚔𝚎𝚝𝚒𝚔 *#𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛*')
 				if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-            db.data.users[m.sender].limit -= 7
-            newReply(`🚩 7 Limit Used`)
+            db.data.users[m.sender].limit -= 1
 	// download menu
 			 if (args.length == 0) newReply (`Usage: ${prefix + command} link`)
                 m.reply(`Mohon tunggu, Bot sedang memproses link lagu...`) 
@@ -2746,7 +3096,7 @@ break
             case 'attp':
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 try {
                 if (args.length == 0) return newReply(`Example: ${prefix + command} ManzGans`)
                 await conn.sendMessage(m.chat, {sticker: {url:`https://api.lolhuman.xyz/api/attp?apikey=${apikey}&text=${full_args}` }}, { quoted: m })
@@ -2834,7 +3184,7 @@ break
             case 'togif': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!/webp/.test(mime)) return newReply(`Reply stiker dengan caption *${prefix + command}*`)
                 newReply(mess.wait)
                 let media = await conn.downloadAndSaveMediaMessage(qmsg)
@@ -2848,7 +3198,7 @@ break
 	        case 'tourl': {
 	            if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 newReply(mess.wait)
                 let media = await conn.downloadAndSaveMediaMessage(qmsg)
                 if (/image/.test(mime)) {
@@ -2864,29 +3214,29 @@ break
             break
             
             // Stalk Fitur
-            case 'igstalk': {
-            if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
-            db.data.users[m.sender].limit -= 10
-            newReply(`🚩 10 Limit Used`)
-			if (args.length == 0) return newReply(`Example: ${prefix + command} whyzzxy`)
-			newReply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/stalkig/${args[0]}?apikey=${apikey}`).then(({ data }) => {
-				var caption = `Username : ${data.result.username}\n`
-				caption += `Full Name : ${data.result.fullname}\n`
-				caption += `Posts : ${data.result.posts}\n`
-				caption += `Followers : ${data.result.followers}\n`
-				caption += `Following : ${data.result.following}\n`
-				caption += `Bio : ${data.result.bio}`
-				conn.sendMessage(m.chat, { image: { url: data.result.photo_profile }, caption })
-			})
-			
-			}
-			break
+
+            case 'igstalk':
+                if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
+                db.data.users[m.sender].limit -= 1
+                if (args.length == 0) return newReply(`Example: ${prefix + command} tinoisgood`)
+                newReply(mess.wait)
+                axios
+                    .get(`https://api.lolhuman.xyz/api/stalkig/${full_args}?apikey=${apikey}`)
+                    .then(({ data }) => {
+                        var text = `Username : *${data.result.username}*\n`
+                        text += `Fullname : *${data.result.fullname}*\n`
+                        text += `Post : *${data.result.post}* post\n`
+                        text += `Follower : *${data.result.followers}*\n`
+                        text += `Following : *${data.result.following}*`
+                        newReply(text)
+                    })
+                    .catch(console.error)
+                    break
 
             case 'ttstalk': {
             if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 10
-            newReply(`🚩 10 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} dryan.pu`)
 			newReply(mess.wait)
 			axios.get(`https://api.lolhuman.xyz/api/stalktiktok/${args[0]}?apikey=${apikey}`).then(({ data }) => {
@@ -2906,7 +3256,7 @@ break
 			case 'mlstalk': {
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 10
-            newReply(`🚩 10 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} 84830127/2169`)
 			newReply(mess.wait)
 			(`https://api.lolhuman.xyz/api/mobilelegend/${args[0]}?apikey=${apikey}`)
@@ -2918,7 +3268,7 @@ break
 			case 'ghstalk': {
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 10
-            newReply(`🚩 10 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} ManzGans`)
 			newReply(mess.wait)
 			axios.get(`https://api.lolhuman.xyz/api/github/${args[0]}?apikey=${apikey}`).then(({ data }) => {
@@ -2938,7 +3288,7 @@ break
 		    case 'twstalk': {
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 10
-            newReply(`🚩 10 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} jokowi`)
 			newReply(mess.wait)
 			axios.get(`https://api.lolhuman.xyz/api/twitter/${args[0]}?apikey=${apikey}`).then(({ data }) => {
@@ -2987,7 +3337,7 @@ break
 			case 'dj':
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			newReply(mess.wait)
                 conn.sendMessage(m.chat, { image: { url: `https://api.lolhuman.xyz/api/meme/darkjoke?apikey=${apikey}`}, caption: `Ehem jgn tersinggung`}, {quoted: m})
             break
@@ -2995,7 +3345,7 @@ break
 			case 'meme':
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			newReply(mess.wait)
                 conn.sendMessage(m.chat, { image: { url: `https://api.lolhuman.xyz/api/random/meme?apikey=${apikey}`}, caption: `Done?`}, {quoted: m})
             break
@@ -3003,7 +3353,7 @@ break
 			case 'memeindo':
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
                 newReply(mess.wait)
                 conn.sendMessage(m.chat, { image: { url: `https://api.lolhuman.xyz/api/meme/memeindo?apikey=${apikey}`}, caption: `Done?`}, {quoted: m})
             break
@@ -3038,7 +3388,7 @@ break
 			case 'bucincert':
 			    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
 				if (args.length == 0) return newReply(`Example: ${prefix + command} Justimun Kentod`)
 				newReply(mess.wait)
 				kueri = args.join(" ")
@@ -3050,7 +3400,7 @@ break
 			case 'tololsertifikat':
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} Justimun Kentod`)
 			newReply(mess.wait)
 			ytta = args.join(" ")
@@ -3061,7 +3411,7 @@ break
 			case 'pacarcert':
 			if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
             if (args.length == 0) return newReply(`Usage: ${prefix + command} nama1|nama2`)
             newReply(mess.wait)
                 get_args = args.join(" ").split("|")
@@ -3258,7 +3608,7 @@ break
             case 'yuki': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 newReply(mess.wait)
                 let anu = await fetchJson(`https://raw.githubusercontent.com/Abuzzpoet/Databasee/main/Random%20Anime/${command}.json`)
                 result = anu[Math.floor(Math.random() * anu.length)]               
@@ -3292,7 +3642,7 @@ break
             case 'technology': {
             if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
             newReply(mess.wait)
                 let anu = await fetchJson(`https://raw.githubusercontent.com/Abuzzpoet/Databasee/main/Wallpaper/${command}.json`)
                 result = anu[Math.floor(Math.random() * anu.length)]               
@@ -3310,7 +3660,7 @@ break
             case 'vietnam': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 10
-                newReply(`🚩 10 Limit Used`)
+                
                 newReply(mess.wait)
                 let anu = await fetchJson(`https://raw.githubusercontent.com/Abuzzpoet/Databasee/main/Cecan/${command}.json`)
                 result = anu[Math.floor(Math.random() * anu.length)]               
@@ -3320,7 +3670,7 @@ break
             case 'couple': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 10
-                newReply(`🚩 10 Limit Used`)
+                
                 let anu = await fetchJson('https://raw.githubusercontent.com/iamriz7/kopel_/main/kopel.json')
                 newReply(mess.wait)
                 let random = anu[Math.floor(Math.random() * anu.length)]
@@ -3353,7 +3703,7 @@ break
                     const media = await conn.downloadAndSaveMediaMessage(quoted)
                     const anu = await TelegraPh(media)
                     await 
-                    conn.sendMessage(m.chat, { image: { url: `https://api.itsrose.site/image/unblur?url=${anu}&apikey=${rosekey}` }, caption: `Sukses membuat hd` }, { quoted: m })
+                    conn.sendMessage(m.chat, { image: { url: `https://api.itsrose.site/image/unblur?url=${anu}&apikey=olengblogeid` }, caption: `Sukses membuat hd` }, { quoted: m })
                 } else {
                 newReply('Reply gambar nya bang')
                 }
@@ -3379,7 +3729,7 @@ break
 			case 'nomerhoki': case 'nomorhoki': {
 			    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!Number(text)) return newReply(`Contoh : ${prefix + command} 6288292024190`)
                 let anu = await primbon.nomer_hoki(Number(text))
                 if (anu.status == false) return newReply(anu.message)
@@ -3389,7 +3739,7 @@ break
             case 'artimimpi': case 'tafsirmimpi': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} belanja`)
                 let anu = await primbon.tafsir_mimpi(text)
                 if (anu.status == false) return newReply(anu.message)
@@ -3399,7 +3749,7 @@ break
             case 'ramalanjodoh': case 'ramaljodoh': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika, 7, 7, 2005, Novia, 16, 11, 2004`)
                 let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
                 let anu = await primbon.ramalan_jodoh(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
@@ -3410,7 +3760,7 @@ break
             case 'ramalanjodohbali': case 'ramaljodohbali': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika, 7, 7, 2005, Novia, 16, 11, 2004`)
                 let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
                 let anu = await primbon.ramalan_jodoh_bali(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
@@ -3421,7 +3771,7 @@ break
             case 'suamiistri': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika, 7, 7, 2005, Novia, 16, 11, 2004`)
                 let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
                 let anu = await primbon.suami_istri(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
@@ -3432,7 +3782,7 @@ break
             case 'ramalancinta': case 'ramalcinta': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika, 7, 7, 2005, Novia, 16, 11, 2004`)
                 let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
                 let anu = await primbon.ramalan_cinta(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
@@ -3443,7 +3793,7 @@ break
             case 'artinama': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika Ardianta`)
                 let anu = await primbon.arti_nama(text)
                 if (anu.status == false) return newReply(anu.message)
@@ -3453,7 +3803,7 @@ break
             case 'kecocokannama': case 'cocoknama': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika, 7, 7, 2005`)
                 let [nama, tgl, bln, thn] = text.split`,`
                 let anu = await primbon.kecocokan_nama(nama, tgl, bln, thn)
@@ -3464,7 +3814,7 @@ break
             case 'kecocokanpasangan': case 'cocokpasangan': case 'pasangan': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika|Novia`)
                 let [nama1, nama2] = text.split`|`
                 let anu = await primbon.kecocokan_nama_pasangan(nama1, nama2)
@@ -3475,7 +3825,7 @@ break
             case 'jadianpernikahan': case 'jadiannikah': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 6, 12, 2020`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.tanggal_jadian_pernikahan(tgl, bln, thn)
@@ -3486,7 +3836,7 @@ break
             case 'sifatusaha': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!ext)return newReply(`Contoh : ${prefix+ command} 28, 12, 2021`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.sifat_usaha_bisnis(tgl, bln, thn)
@@ -3497,7 +3847,7 @@ break
             case 'rejeki': case 'rezeki': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.rejeki_hoki_weton(tgl, bln, thn)
@@ -3508,7 +3858,7 @@ break
             case 'pekerjaan': case 'kerja': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.pekerjaan_weton_lahir(tgl, bln, thn)
@@ -3519,7 +3869,7 @@ break
             case 'ramalannasib': case 'ramalnasib': case 'nasib': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.ramalan_nasib(tgl, bln, thn)
@@ -3530,7 +3880,7 @@ break
             case 'potensipenyakit': case 'penyakit': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.cek_potensi_penyakit(tgl, bln, thn)
@@ -3541,7 +3891,7 @@ break
             case 'artitarot': case 'tarot': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.arti_kartu_tarot(tgl, bln, thn)
@@ -3552,7 +3902,7 @@ break
             case 'fengshui': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return `Contoh : ${prefix + command} Dika, 1, 2005\n\nNote : ${prefix + command} Nama, gender, tahun lahir\nGender : 1 untuk laki-laki & 2 untuk perempuan`
                 let [nama, gender, tahun] = text.split`,`
                 let anu = await primbon.perhitungan_feng_shui(nama, gender, tahun)
@@ -3563,7 +3913,7 @@ break
             case 'haribaik': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.petung_hari_baik(tgl, bln, thn)
@@ -3574,7 +3924,7 @@ break
             case 'harisangar': case 'taliwangke': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.hari_sangar_taliwangke(tgl, bln, thn)
@@ -3585,7 +3935,7 @@ break
             case 'harinaas': case 'harisial': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.primbon_hari_naas(tgl, bln, thn)
@@ -3596,7 +3946,7 @@ break
             case 'nagahari': case 'harinaga': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.rahasia_naga_hari(tgl, bln, thn)
@@ -3607,7 +3957,7 @@ break
             case 'arahrejeki': case 'arahrezeki': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.primbon_arah_rejeki(tgl, bln, thn)
@@ -3618,7 +3968,7 @@ break
             case 'peruntungan': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} DIka, 7, 7, 2005, 2022\n\nNote : ${prefix + command} Nama, tanggal lahir, bulan lahir, tahun lahir, untuk tahun`)
                 let [nama, tgl, bln, thn, untuk] = text.split`,`
                 let anu = await primbon.ramalan_peruntungan(nama, tgl, bln, thn, untuk)
@@ -3629,7 +3979,7 @@ break
             case 'weton': case 'wetonjawa': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 7, 7, 2005`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.weton_jawa(tgl, bln, thn)
@@ -3640,7 +3990,7 @@ break
             case 'sifat': case 'karakter': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika, 7, 7, 2005`)
                 let [nama, tgl, bln, thn] = text.split`,`
                 let anu = await primbon.sifat_karakter_tanggal_lahir(nama, tgl, bln, thn)
@@ -3651,7 +4001,7 @@ break
             case 'keberuntungan': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} Dika, 7, 7, 2005`)
                 let [nama, tgl, bln, thn] = text.split`,`
                 let anu = await primbon.potensi_keberuntungan(nama, tgl, bln, thn)
@@ -3662,7 +4012,7 @@ break
             case 'memancing': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 12, 1, 2022`)
                 let [tgl, bln, thn] = text.split`,`
                 let anu = await primbon.primbon_memancing_ikan(tgl, bln, thn)
@@ -3673,7 +4023,7 @@ break
             case 'masasubur': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} 12, 1, 2022, 28\n\nNote : ${prefix + command} hari pertama menstruasi, siklus`)
                 let [tgl, bln, thn, siklus] = text.split`,`
                 let anu = await primbon.masa_subur(tgl, bln, thn, siklus)
@@ -3684,7 +4034,7 @@ break
             case 'zodiak': case 'zodiac': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix+ command} 7 7 2005`)
                 let zodiak = [
                     ["capricorn", new Date(1970, 0, 1)],
@@ -3722,14 +4072,208 @@ break
             case 'shio': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 if (!text) return newReply(`Contoh : ${prefix + command} tikus\n\nNote : For Detail https://primbon.com/shio.htm`)
                 let anu = await primbon.shio(text)
                 if (anu.status == false) return newReply(anu.message)
                 conn.sendText(m.chat, `• *Hasil :* ${anu.message}`, m)
             }
             break
-			
+            case 'tebak': {
+                if (args[0] === 'gambar') {
+                    if (tebakgambar.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakgambar.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendMessage(m.chat, {
+                        image: {
+                            url: result.img
+                        },
+                        caption: `Silahkan Jawab Soal Di Atas Ini\n\nDeskripsi : ${result.deskripsi}\nWaktu : 60s`
+                    }, {
+                        quoted: m
+                    }).then(() => {
+                        tebakgambar[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebakgambar.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebakgambar[m.sender.split('@')[0]]}`, m)
+                        delete tebakgambar[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'kata') {
+                    if (tebakkata.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkata.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\n${result.soal}\nWaktu : 60s`, m).then(() => {
+                        tebakkata[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebakkata.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebakkata[m.sender.split('@')[0]]}`, m)
+                        delete tebakkata[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'kalimat') {
+                    if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkalimat.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\n${result.soal}\nWaktu : 60s`, m).then(() => {
+                        tebakkalimat[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebakkalimat[m.sender.split('@')[0]]}`, m)
+                        delete tebakkalimat[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'lirik') {
+                    if (tebaklirik.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebaklirik.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Ini Adalah Lirik Dari Lagu? : *${result.soal}*?\nWaktu : 60s`, m).then(() => {
+                        tebaklirik[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebaklirik.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebaklirik[m.sender.split('@')[0]]}`, m)
+                        delete tebaklirik[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'tebakan') {
+                    if (tebaktebakan.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebaktebakan.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Jawablah Pertanyaan Berikut : *${result.soal}*?\nWaktu : 60s`, m).then(() => {
+                        tebaktebakan[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebaktebakan.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebaktebakan[m.sender.split('@')[0]]}`, m)
+                        delete tebaktebakan[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'bendera') {
+                    if (tebakbendera.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakbendera.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendMessage(m.chat, {
+                        image: {
+                            url: result.img
+                        },
+                        caption: `Silahkan Jawab Gambar Berikut\n\nClue : ${result.flag}\nWaktu : 60s`
+                    }, {
+                        quoted: m
+                    }).then(() => {
+                        tebakbendera[m.sender.split('@')[0]] = result.name.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebakbendera.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.name)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebakbendera[m.sender.split('@')[0]]}`, m)
+                        delete tebakbendera[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'bendera2') {
+                    if (tebakbendera2.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakbendera2.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendMessage(m.chat, {
+                        image: {
+                            url: result.img
+                        },
+                        caption: `Silahkan Jawab Gambar Berikut\n\nWaktu : 60s`
+                    }, {
+                        quoted: m
+                    }).then(() => {
+                        tebakbendera2[m.sender.split('@')[0]] = result.name.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebakbendera2.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.name)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebakbendera2[m.sender.split('@')[0]]}`, m)
+                        delete tebakbendera2[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'kabupaten') {
+                    if (tebakkabupaten.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkabupaten.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendImage(m.chat, result.url, `Silahkan Jawab Gambar Berikut\n\nWaktu : 60s`, m).then(() => {
+                        tebakkabupaten[m.sender.split('@')[0]] = result.title.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebakkabupaten.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.title)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebakkabupaten[m.sender.split('@')[0]]}`, m)
+                        delete tebakkabupaten[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'kimia') {
+                    if (tebakkimia.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkimia.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\nUnsur : ${result.unsur}\nWaktu : 60s`, m).then(() => {
+                        tebakkimia[m.sender.split('@')[0]] = result.lambang.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebakkimia.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.lambang)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebakkimia[m.sender.split('@')[0]]}`, m)
+                        delete tebakkimia[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'asahotak') {
+                    if (tebakasahotak.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/asahotak.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\nSoal : ${result.soal}\nWaktu : 60s`, m).then(() => {
+                        tebakasahotak[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebakasahotak.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebakasahotak[m.sender.split('@')[0]]}`, m)
+                        delete tebakasahotak[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'siapakahaku') {
+                    if (tebaksiapakahaku.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/siapakahaku.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\nSoal : ${result.soal}\nWaktu : 60s`, m).then(() => {
+                        tebaksiapakahaku[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebaksiapakahaku.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebaksiapakahaku[m.sender.split('@')[0]]}`, m)
+                        delete tebaksiapakahaku[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'susunkata') {
+                    if (tebaksusunkata.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/susunkata.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\nSoal : ${result.soal}\nTipe : ${result.tipe}\nWaktu : 60s`, m).then(() => {
+                        tebaksusunkata[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebaksusunkata.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebaksusunkata[m.sender.split('@')[0]]}`, m)
+                        delete tebaksusunkata[m.sender.split('@')[0]]
+                    }
+                } else if (args[0] === 'tekateki') {
+                    if (tebaktekateki.hasOwnProperty(m.sender.split('@')[0])) return newReply("Masih Ada Sesi Yang Belum Diselesaikan!")
+                    let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tekateki.json')
+                    let result = anu[Math.floor(Math.random() * anu.length)]
+                    conn.sendText(m.chat, `Silahkan Jawab Pertanyaan Berikut\n\nSoal : ${result.soal}\nWaktu : 60s`, m).then(() => {
+                        tebaktekateki[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
+                    })
+                    await sleep(60000)
+                    if (tebaktekateki.hasOwnProperty(m.sender.split('@')[0])) {
+                        console.log("Jawaban: " + result.jawaban)
+                        conn.sendText(m.chat, `Waktu Habis\nJawaban:  ${tebaktekateki[m.sender.split('@')[0]]}`, m)
+                        delete tebaktekateki[m.sender.split('@')[0]]
+                    }
+                }
+            }
+            break
+
 			/*case 'family100': {
                 if ('family100'+m.chat in _family100) {
                     newReply('Masih Ada Sesi Yang Belum Diselesaikan!')
@@ -3792,7 +4336,7 @@ break
             case 'tupai': {
                 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
                 db.data.users[m.sender].limit -= 5
-                newReply(`🚩 5 Limit Used`)
+                
                 try {
                 let set
                 if (/bass/.test(command)) set = '-af equalizer=f=54:width_type=o:width=2:g=20'
@@ -3860,7 +4404,7 @@ case 'playstore':
 					 case 'infocuaca':{
 		    if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
             db.data.users[m.sender].limit -= 5
-            newReply(`🚩 5 Limit Used`)
+            
 			if (args.length == 0) return newReply(`Example: ${prefix + command} Yogyakarta`)
 			newReply(mess.wait)
 			get_result = await fetchJson(`https://api.lolhuman.xyz/api/cuaca/${args[0]}?apikey=${apikey}`)
@@ -4153,112 +4697,70 @@ case 'sound160':
 case 'sound161':
 if (!isPremium && global.db.data.users[m.sender].limit < 1) return newReply(mess.endLimit) // respon ketika limit habis
 db.data.users[m.sender].limit -= 5
-newReply(`🚩 5 Limit Used`)
+
 arxzy = await getBuffer(`https://github.com/DGXeon/Tiktokmusic-API/raw/master/tiktokmusic/${command}.mp3`)
 await conn.sendMessage(m.chat, { audio: arxzy, mimetype: 'audio/mp4', ptt: true }, { quoted: m })     
 break
-            case 'menu':
-			 if (!isRegistered) return newReply('Kamu belum daftar! Silahkan daftar dengan cara #daftar nama|umur!')
-    let menunya =` 𝖂𝖊𝖑𝖈𝖔𝖒𝖊 𝖙𝖔 𝖙𝖍𝖊 𝖙𝖊𝖆𝖒!
-  ⭔ *Mode:* ${conn.public ? 'Public-Mode 👥' : 'Self-Mode 👤'}
-  ⭔ *Tanggal:* ${hariini}
-  ⭔ *Jam*: ${wib}
-  ⭔ *Baileys:* npm:baileysv2@9.0.2
-  ⭔ *Runtime:* ${runtime(process.uptime())}
-  ⭔ *Total User:* ${Object.keys(global.db.data.users).length}
-  ⭔ *Total Fitur:* ${totalFitur()}
+case 'menu':
+	if (!isRegistered) return newReply('𝙺𝚊𝚖𝚞 𝚋𝚎𝚕𝚞𝚖 𝚍𝚊𝚏𝚝𝚊𝚛! 𝚂𝚒𝚕𝚊𝚑𝚔𝚊𝚗 𝚍𝚊𝚏𝚝𝚊𝚛 𝚍𝚎𝚗𝚐𝚊𝚗 𝚌𝚊𝚛𝚊 𝚔𝚎𝚝𝚒𝚔 *#𝚍𝚊𝚏𝚝𝚊𝚛 𝚗𝚊𝚖𝚊|𝚞𝚖𝚞𝚛*')
+    let menunya =` 𝚂𝚎𝚕𝚊𝚖𝚊𝚝 𝚍𝚊𝚝𝚊𝚗𝚐 𝚍𝚒 *𝙵𝚊𝚝𝚑𝚎𝚛𝙱𝚘𝚝-𝙼𝙳*
+
+    ‣‣‣ *𝙸𝙽𝙵𝙾 𝚂𝙴𝚁𝚅𝙴𝚁* ‣‣‣
+
+    ⭔ *𝙼𝙾𝙳𝙴 :* ${conn.public ? '𝙿𝚄𝙱𝙻𝙸𝙲' : ' 𝙿𝚁𝙸𝚅𝙰𝚃𝙴'}
+    ⭔ *𝚃𝙰𝙽𝙶𝙶𝙰𝙻 :* ${hariini}
+    ⭔ *𝙹𝙰𝙼*: ${wib}
+    ⭔ *𝙱𝙰𝙸𝙻𝙴𝚈𝚂 :* encodeXs
+    ⭔ *𝚁𝚄𝙽𝚃𝙸𝙼𝙴 :* ${runtime(process.uptime())}
+    ⭔ *𝚃𝙾𝚃𝙰𝙻 𝚄𝚂𝙴𝚁 :* ${Object.keys(global.db.data.users).length}
+    ⭔ *𝚃𝙾𝚃𝙰𝙻 𝙵𝙸𝚃𝚄𝚁𝙴 :* ${totalFitur()}
   
-⭔ *INFO USER*
+    ‣‣‣ *𝙸𝙽𝙵𝙾 𝚄𝚂𝙴𝚁* ‣‣‣
 
-   👨‍💻 *Name:* ${pushname}
-   📞 *Number:* ${m.sender.split('@')[0]}
-   📕 *Status:* ${isCreator ? "Owner" : "User"}
-   😁 *User:* ${isPremium ? 'Premium' : 'Gratisan'}
-   📲 *Limit:* ${isCreator ? 'Unlimited' : `${db.data.users[m.sender].limit}`}
-   ${readmore}
-⭔ *OWNER MENU*
-◇ ‣ ${prefix}enc *<text>*
-◇ ‣ ${prefix}spamsms
-◇ ‣ ${prefix}call
-◇ ‣ ${prefix}pushkontak *<text>*
-◇ ‣ ${prefix}autoread *<on/off>*
-◇ ‣ ${prefix}cekapikey *<apikey>*
-◇ ‣ ${prefix}autobio *<on/off>*
-◇ ‣ ${prefix}bcgc *<text>*
-◇ ‣ ${prefix}bc *<text>*
-◇ ‣ ${prefix}lockcmd *<text>*
-◇ ‣ ${prefix}addprem *<@user>*
-◇ ‣ ${prefix}delprem *<@user>*
-◇ ‣ ${prefix}addvn *<sound>*
-◇ ‣ ${prefix}delvn *<sound>*
-◇ ‣ ${prefix}join *<link>*
-◇ ‣ ${prefix}leave *only group*
-◇ ‣ ${prefix}setexif *<package | author>*
-◇ ‣ ${prefix}setppbot *<reply | caption>*
-◇ ‣ ${prefix}setppbot full *<reply | caption>*
-◇ ‣ ${prefix}setnamabot *<text>*
-◇ ‣ ${prefix}setbiobot *<text>*
-◇ ‣ ${prefix}block *<@user>*
-◇ ‣ ${prefix}unblock *<@user>*
-◇ ‣ ${prefix}ambilsesi
-◇ ‣ ${prefix}ambilcase
-◇ ‣ ${prefix}listpc
-◇ ‣ ${prefix}listgc
-◇ ‣ ${prefix}public
-◇ ‣ ${prefix}self
-◇ ‣ ${prefix}myip
-◇ ‣ ${prefix}chat 
-◇ ‣ ${prefix}shutdown
-◇ ‣  >
-◇ ‣  =>
+    ⭔ *𝙽𝙰𝙼𝙴 :* ${pushname}
+    ⭔ *𝙽𝚄𝙼𝙱𝙴𝚁 :* ${m.sender.split('@')[0]}
+    ⭔ *𝚂𝚃𝙰𝚃𝚄𝚂 :* ${isCreator ? "𝙾𝚆𝙽𝙴𝚁" : "𝚄𝚂𝙴𝚁"}
+    ⭔ *𝚄𝚂𝙴𝚁 :* ${isPremium ? '𝙿𝚁𝙴𝙼𝙸𝚄𝙼' : '𝙵𝚁𝙴𝙴'}
+    ⭔ *𝙻𝙸𝙼𝙸𝚃 :* ${isCreator ? '𝚄𝙽𝙻𝙸𝙼𝙸𝚃𝙴𝙳' : `${db.data.users[m.sender].limit}`}
 
-⭔ *CONVERT MENU*
-_Mau ubah apa?_
-◇ ‣ ${prefix}stiker *<image>*
-◇ ‣ ${prefix}wm *<image>*
-◇ ‣ ${prefix}smeme *<image>*
-◇ ‣ ${prefix}emojimix *<😫>*
-◇ ‣ ${prefix}emojimix2 *<😫+🥶>*
-◇ ‣ ${prefix}toimage *<reply sticker>*
-◇ ‣ ${prefix}tomp4 *<reply sticker>*
-◇ ‣ ${prefix}toaudio *<video>*
-◇ ‣ ${prefix}tomp3 *<video>*
-◇ ‣ ${prefix}tovn *<video>*
-◇ ‣ ${prefix}togif *<image>*
-◇ ‣ ${prefix}tourl *<media>*
 
-⭔ *STALKER MENU*
-_Cieee, suka nih :v_
-◇ ‣ ${prefix}igstalk *<username>*
-◇ ‣ ${prefix}ttstalk *<username>*
-◇ ‣ ${prefix}mlstalk *<username>*
-◇ ‣ ${prefix}ghstalk *<username>*
-◇ ‣ ${prefix}twstalk *<username>*
+    ${readmore}
+    ‣‣‣ *𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙴𝚁 𝙼𝙴𝙽𝚄* ‣‣‣
 
-⭔ *GROUP MENU*
-_Lu admin lu punya kuasa_
-◇ ‣ ${prefix}kick *<@user>*
-◇ ‣ ${prefix}add *<@user>*
-◇ ‣ ${prefix}culik *<@user>*
-◇ ‣ ${prefix}promote *<@user>*
-◇ ‣ ${prefix}demote *<@user>*
-◇ ‣ ${prefix}setname *<text>*
-◇ ‣ ${prefix}setdesc *<text>*
-◇ ‣ ${prefix}setppgc *<reply | caption>*
-◇ ‣ ${prefix}tagall *<text>*
-◇ ‣ ${prefix}hidetag *<text>*
-◇ ‣ ${prefix}totag *<text>*
-◇ ‣ ${prefix}antilink *<on/off>*
-◇ ‣ ${prefix}antilinkv2 *<on/off>*
-◇ ‣ ${prefix}antilinkyt *<on/off>*
-◇ ‣ ${prefix}antilinktt *<on/off>*
-◇ ‣ ${prefix}group *<close/open>*
-◇ ‣ ${prefix}editinfo *<text>*
-◇ ‣ ${prefix}mutegc
-◇ ‣ ${prefix}ephemeral
-◇ ‣ ${prefix}linkgc 
-◇ ‣ ${prefix}revoke
-◇ ‣ ${prefix}liston
+    ⭔ ${prefix}*𝚂𝚃𝙸𝙲𝙺𝙴𝚁* _𝚔𝚒𝚛𝚒𝚖 𝚐𝚊𝚖𝚋𝚊𝚛 𝚍𝚎𝚗𝚐𝚊𝚗 𝚝𝚊𝚐_
+    ⭔ ${prefix}*𝚂𝙼𝙴𝙼𝙴* _𝚔𝚒𝚛𝚒𝚖 𝚐𝚊𝚖𝚋𝚊𝚛 𝚍𝚎𝚗𝚐𝚊𝚗 𝚝𝚊𝚐_
+    ⭔ ${prefix}*𝚃𝙾𝙼𝙿4* _𝚜𝚝𝚒𝚌𝚔𝚎𝚛 𝚊𝚝𝚊𝚞 𝚐𝚒𝚏𝚝 𝚓𝚊𝚍𝚒 𝚟𝚒𝚍𝚎𝚘_
+    ⭔ ${prefix}*𝚃𝙾𝙼𝙿3* _𝚟𝚒𝚍𝚎𝚘 𝚙𝚎𝚗𝚍𝚎𝚔 𝚓𝚊𝚍𝚒 𝚜𝚞𝚊𝚛𝚊_
+    ⭔ ${prefix}*𝚃𝙾𝚅𝙽* _𝚟𝚒𝚍𝚎𝚘/𝚜𝚞𝚊𝚛𝚊 𝚓𝚊𝚍𝚒 𝚟𝚗_
+    ⭔ ${prefix}*𝚃𝙾𝙼𝙿3* _𝚟𝚒𝚍𝚎𝚘/𝚜𝚞𝚊𝚛𝚊 𝚓𝚊𝚍𝚒 𝚖𝚙3_
+    ⭔ ${prefix}*𝚃𝙾𝙶𝙸𝙵* _𝚟𝚒𝚍𝚎𝚘 𝚊𝚝𝚊𝚞 𝚜𝚝𝚒𝚌𝚔𝚎𝚛 𝚓𝚊𝚍𝚒 𝚐𝚒𝚏𝚝_
+
+    ‣‣‣ *𝚂𝚃𝙰𝙻𝙺𝙴𝚁 𝙼𝙴𝙽𝚄* ‣‣‣
+
+    ⭔ ${prefix}*𝙸𝙶𝚂𝚃𝙰𝙻𝙺* _𝚍𝚊𝚗 𝚒𝚍 𝚒𝚐_
+
+    ‣‣‣ *𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳𝙴𝚁 𝙼𝙴𝙽𝚄* ‣‣‣
+
+    ⭔ ${prefix}*𝚈𝚃𝙼𝙿3* _𝚕𝚒𝚗𝚔 𝚟𝚒𝚍𝚎𝚘 𝚢𝚝_
+    ⭔ ${prefix}*𝚈𝚃𝙼𝙿4* _𝚕𝚒𝚗𝚔 𝚟𝚒𝚍𝚎𝚘 𝚢𝚝_
+    ⭔ ${prefix}*𝚃𝙸𝙺𝚃𝙾𝙺* _𝚕𝚒𝚗𝚔 𝚟𝚒𝚍𝚎𝚘 𝚝𝚒𝚔𝚝𝚘𝚔_
+    ⭔ ${prefix}*𝚃𝙸𝙺𝚃𝙾𝙺𝙰𝚄𝙳𝙸𝙾* _𝚕𝚒𝚗𝚔 𝚟𝚒𝚍𝚎𝚘 𝚝𝚒𝚔𝚝𝚘𝚔_
+    ⭔ ${prefix}*𝙸𝙶𝙳𝙻* _𝚕𝚒𝚗𝚔 𝚟𝚒𝚍𝚎𝚘 𝚊𝚝𝚊𝚞 𝚏𝚘𝚝𝚘 𝚒𝚐_
+  
+    ‣‣‣ *𝙾𝚃𝙷𝙴𝚁 𝙼𝙴𝙽𝚄* ‣‣‣
+
+    ⭔ ${prefix}*𝙲𝙴𝙺𝚁𝙴𝚂𝙸* _𝚙𝚊𝚜𝚝𝚒𝚔𝚊𝚗 𝚗𝚘 𝚛𝚎𝚜𝚒 𝚋𝚎𝚗𝚎𝚛 𝚢𝚊_
+    ⭔ ${prefix}*𝙲𝙴𝙺𝙰𝙿𝙸𝙺𝙴𝚈* _𝚔𝚑𝚞𝚜𝚞𝚜 𝚘𝚠𝚗𝚎𝚛_
+    ⭔ ${prefix}*𝙸𝙽𝙵𝙾𝙶𝙴𝙼𝙿𝙰* _𝚒𝚗𝚏𝚘 𝚐𝚎𝚖𝚙𝚊 𝚝𝚎𝚛𝚔𝚒𝚗𝚒_
+    ⭔ ${prefix}*𝙲𝙴𝙺𝙺𝙾𝙳𝙴𝙿𝙾𝚂* _𝚖𝚊𝚜𝚞𝚔𝚔𝚊𝚗 𝚗𝚊𝚖𝚊 𝚔𝚊𝚋𝚞𝚙𝚊𝚝𝚎𝚗_
+    ⭔ ${prefix}*𝙸𝙽𝙵𝙾𝙲𝚄𝙰𝙲𝙰* _𝚖𝚊𝚜𝚞𝚔𝚔𝚊𝚗 𝚗𝚊𝚖𝚊 𝚔𝚊𝚋𝚞𝚙𝚊𝚝𝚎𝚗_
+
+    ‣‣‣ *𝙴𝙳𝚄𝙲𝙰𝚃𝙸𝙾𝙽 𝙼𝙴𝙽𝚄* ‣‣‣
+
+    ⭔ ${prefix}*𝙱𝚁𝙰𝙸𝙽𝙻𝚈* _𝚊𝚙𝚊 𝚢𝚊𝚗𝚐 𝚖𝚊𝚞 𝚍𝚒𝚌𝚊𝚛𝚒_
+    ⭔ ${prefix}*𝚁𝙾𝙱𝙾𝙶𝚄𝚁𝚄* _𝚊𝚙𝚊 𝚢𝚊𝚗𝚐 𝚖𝚊𝚞 𝚍𝚒𝚌𝚊𝚛𝚒_
+    ⭔ ${prefix}*𝚆𝙸𝙺𝙸𝙿𝙴𝙳𝙸𝙰* _𝚊𝚙𝚊 𝚢𝚊𝚗𝚐 𝚖𝚊𝚞 𝚍𝚒𝚌𝚊𝚛𝚒_
+    ${readmore}
 
 ⭔ *FUN MENU*
 _Tukang iseng & senang-senang!_
@@ -4420,19 +4922,7 @@ _Ayo dapat hidayah dengan membaca Al-Quran_
 ◇ ‣ ${prefix}hadist
 ◇ ‣ ${prefix}tasfirsurah
 
-⭔ *DOWNLOAD MENU*
-_Download apa gan? Lagu atau video?_
-◇ ‣ ${prefix}ytplay *<name>*
-◇ ‣ ${prefix}ytmp3 *<link>*
-◇ ‣ ${prefix}ytmp4 *<link>*
-◇ ‣ ${prefix}tiktok *<link>*
-◇ ‣ ${prefix}tiktokaudio *<link>*
-◇ ‣ ${prefix}igdl *<link>*
-◇ ‣ ${prefix}spotify *<link>*
-◇ ‣ ${prefix}igdl2 *<link>*
-◇ ‣ ${prefix}twtdl *<link>*
-◇ ‣ ${prefix}fbdl *<link>*
-◇ ‣ ${prefix}gitclone *<link>*
+
 
 ⭔ *EPHOTO 1*
 _Kreasikan fotomu dengan bot!_
